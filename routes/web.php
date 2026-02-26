@@ -15,16 +15,11 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $userId = auth()->id();
-
     return view('dashboard', [
-        'subjectsCount' => Subject::query()->where('user_id', $userId)->count(),
-        'sessionsCount' => ClassSession::query()->where('user_id', $userId)->count(),
-        'attendancesCount' => Attendance::query()
-            ->whereHas('classSession', fn ($query) => $query->where('user_id', $userId))
-            ->count(),
+        'subjectsCount' => Subject::query()->count(),
+        'sessionsCount' => ClassSession::query()->count(),
+        'attendancesCount' => Attendance::query()->count(),
         'activeSessions' => ClassSession::query()
-            ->where('user_id', $userId)
             ->where('starts_at', '<=', now())
             ->where('ends_at', '>=', now())
             ->with('subject')

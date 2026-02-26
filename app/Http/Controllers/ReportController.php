@@ -12,10 +12,7 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $userId = auth()->id();
-
         $subjects = Subject::query()
-            ->where('user_id', $userId)
             ->orderBy('name')
             ->get();
 
@@ -40,7 +37,6 @@ class ReportController extends Controller
             ->selectRaw('COUNT(*) as attendances_count')
             ->selectRaw('COUNT(DISTINCT class_sessions.id) as sessions_count')
             ->join('class_sessions', 'class_sessions.id', '=', 'attendances.class_session_id')
-            ->where('class_sessions.user_id', $userId)
             ->whereBetween('attendances.scanned_at', [$from, $to])
             ->when($subjectId, fn ($query) => $query->where('class_sessions.subject_id', $subjectId))
             ->groupBy(DB::raw('DATE(attendances.scanned_at)'))
@@ -52,7 +48,6 @@ class ReportController extends Controller
             ->selectRaw('COUNT(*) as attendances_count')
             ->join('class_sessions', 'class_sessions.id', '=', 'attendances.class_session_id')
             ->join('subjects', 'subjects.id', '=', 'class_sessions.subject_id')
-            ->where('class_sessions.user_id', $userId)
             ->whereBetween('attendances.scanned_at', [$from, $to])
             ->when($subjectId, fn ($query) => $query->where('class_sessions.subject_id', $subjectId))
             ->groupBy('subjects.name')

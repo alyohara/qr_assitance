@@ -11,7 +11,6 @@ class SubjectController extends Controller
     public function index()
     {
         $subjects = Subject::query()
-            ->where('user_id', auth()->id())
             ->withCount('sessions')
             ->latest()
             ->get();
@@ -66,8 +65,6 @@ class SubjectController extends Controller
      */
     public function update(Request $request, Subject $subject)
     {
-        abort_unless((int) $subject->user_id === (int) auth()->id(), 403);
-
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'code' => ['nullable', 'string', 'max:30'],
@@ -83,8 +80,6 @@ class SubjectController extends Controller
      */
     public function destroy(Subject $subject)
     {
-        abort_unless((int) $subject->user_id === (int) auth()->id(), 403);
-
         $subject->delete();
 
         return redirect()->route('subjects.index')->with('status', 'Materia eliminada.');
@@ -92,8 +87,6 @@ class SubjectController extends Controller
 
     public function exportCsv(Subject $subject)
     {
-        abort_unless((int) $subject->user_id === (int) auth()->id(), 403);
-
         $subject->load(['sessions.attendances.student']);
 
         $filename = 'asistencias-materia-'.$subject->id.'.csv';

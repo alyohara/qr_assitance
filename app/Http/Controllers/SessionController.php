@@ -13,12 +13,10 @@ class SessionController extends Controller
     public function index()
     {
         $subjects = Subject::query()
-            ->where('user_id', auth()->id())
             ->orderBy('name')
             ->get();
 
         $sessions = ClassSession::query()
-            ->where('user_id', auth()->id())
             ->with(['subject'])
             ->withCount('attendances')
             ->latest('starts_at')
@@ -43,7 +41,7 @@ class SessionController extends Controller
         $data = $request->validate([
             'subject_id' => [
                 'required',
-                Rule::exists('subjects', 'id')->where(fn ($query) => $query->where('user_id', auth()->id())),
+                Rule::exists('subjects', 'id'),
             ],
             'topic' => ['nullable', 'string', 'max:120'],
             'starts_at' => ['required', 'date'],
@@ -70,8 +68,6 @@ class SessionController extends Controller
      */
     public function show(ClassSession $classSession)
     {
-        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
-
         $classSession->load([
             'subject',
             'attendances.student',
@@ -98,8 +94,6 @@ class SessionController extends Controller
      */
     public function update(Request $request, ClassSession $classSession)
     {
-        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
-
         $data = $request->validate([
             'topic' => ['nullable', 'string', 'max:120'],
             'ends_at' => ['required', 'date', 'after:'.$classSession->starts_at],
@@ -117,8 +111,6 @@ class SessionController extends Controller
      */
     public function destroy(ClassSession $classSession)
     {
-        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
-
         $classSession->delete();
 
         return redirect()->route('sessions.index')->with('status', 'Sesión eliminada.');
@@ -126,8 +118,6 @@ class SessionController extends Controller
 
     public function qrPayload(ClassSession $classSession)
     {
-        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
-
         $window = $classSession->windowForTime();
         $signature = $classSession->signWindow($window);
         $url = route('attendance.scan', [
@@ -148,8 +138,6 @@ class SessionController extends Controller
 
     public function exportCsv(ClassSession $classSession)
     {
-        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
-
         $classSession->load(['subject', 'attendances.student']);
 
         $filename = 'asistencias-sesion-'.$classSession->uuid.'.csv';
