@@ -76,12 +76,6 @@ class SessionController extends Controller
             'attendances.student',
         ]);
 
-        if (! $classSession->subject) {
-            return redirect()->route('sessions.index')->withErrors([
-                'session' => 'La sesión no tiene una materia válida asociada.',
-            ]);
-        }
-
         $classSession->setRelation(
             'attendances',
             $classSession->attendances->sortByDesc('scanned_at')->values()
