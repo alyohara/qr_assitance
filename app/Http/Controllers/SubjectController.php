@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
+use App\Models\ClassSession;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SubjectController extends Controller
 {
@@ -80,7 +83,23 @@ class SubjectController extends Controller
      */
     public function destroy(Subject $subject)
     {
-        $subject->delete();
+        DB::transaction(function () use ($subject): void {
+            $sessionIds = ClassSession::query()
+                ->where('subject_id', $subject->id)
+                ->pluck('id');
+
+            if ($sessionIds->isNotEmpty()) {
+                Attendance::query()
+                    ->whereIn('class_session_id', $sessionIds)
+                    ->delete();
+
+                ClassSession::query()
+                    ->whereIn('id', $sessionIds)
+                    ->delete();
+            }
+
+            $subject->delete();
+        });
 
         return redirect()->route('subjects.index')->with('status', 'Materia eliminada.');
     }
