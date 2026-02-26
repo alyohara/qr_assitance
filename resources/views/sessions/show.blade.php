@@ -23,7 +23,11 @@
                 <p class="mt-2 text-sm text-gray-500">PIN para alumnos</p>
                 <p class="text-2xl tracking-widest font-bold text-indigo-700">{{ $classSession->professor_pin }}</p>
                     </div>
-                    <a href="{{ route('sessions.export-csv', ['classSession' => $sessionRouteKey]) }}" class="self-start rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">Descargar CSV</a>
+                    <div class="self-start flex flex-col gap-2">
+                        <a href="{{ route('sessions.export-csv', ['classSession' => $sessionRouteKey]) }}" class="rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white text-center">Descargar CSV</a>
+                        <a href="{{ $publicQrOnlyUrl }}" target="_blank" class="rounded bg-indigo-600 px-3 py-2 text-xs font-semibold text-white text-center">Publicar datos sin token</a>
+                        <a href="{{ $publicQrWithTokenUrl }}" target="_blank" class="rounded bg-violet-600 px-3 py-2 text-xs font-semibold text-white text-center">Publicar datos con token</a>
+                    </div>
                 </div>
             </div>
 
