@@ -47,8 +47,8 @@
                         <input name="full_name" value="{{ old('full_name') }}" required class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Email (opcional)</label>
-                        <input type="email" name="email" value="{{ old('email') }}" class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">PIN del profesor</label>

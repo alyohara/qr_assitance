@@ -38,7 +38,7 @@ class AttendanceController extends Controller
         $data = $request->validate([
             'student_code' => ['required', 'string', 'max:30'],
             'full_name' => ['required', 'string', 'max:120'],
-            'email' => ['nullable', 'email', 'max:120'],
+            'email' => ['required', 'email', 'max:120'],
             'professor_pin' => ['required', 'digits:6'],
             'window' => ['required', 'integer'],
             'sig' => ['required', 'string'],
@@ -63,7 +63,7 @@ class AttendanceController extends Controller
             ['student_code' => $data['student_code']],
             [
                 'full_name' => $data['full_name'],
-                'email' => $data['email'] ?? null,
+                'email' => $data['email'],
             ]
         );
 
