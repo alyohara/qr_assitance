@@ -8,6 +8,7 @@ use App\Models\Student;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 class AttendanceController extends Controller
 {
@@ -36,7 +37,7 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function store(ClassSession $classSession, Request $request): RedirectResponse
+    public function store(ClassSession $classSession, Request $request): Response|RedirectResponse
     {
         if (! $request->user()) {
             return redirect()->route('google.redirect', ['next' => route('attendance.scan', [
