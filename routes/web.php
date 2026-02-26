@@ -37,7 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('subjects', SubjectController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::resource('sessions', SessionController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::resource('sessions', SessionController::class)
+        ->parameters(['sessions' => 'classSession'])
+        ->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::get('/sessions/{classSession}/qr-payload', [SessionController::class, 'qrPayload'])->name('sessions.qr-payload');
     Route::get('/sessions/{classSession}/export-csv', [SessionController::class, 'exportCsv'])->name('sessions.export-csv');
     Route::get('/subjects/{subject}/export-csv', [SubjectController::class, 'exportCsv'])->name('subjects.export-csv');
