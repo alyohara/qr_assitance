@@ -34,9 +34,12 @@
                     @else
                         <div class="mt-4 space-y-3">
                             @foreach($activeSessions as $session)
-                                <a href="{{ route('sessions.show', $session) }}" class="block rounded border border-gray-200 p-4 hover:bg-gray-50">
-                                    <p class="font-medium text-gray-900">{{ $session->subject->name }} @if($session->topic) · {{ $session->topic }} @endif</p>
-                                    <p class="text-sm text-gray-600">{{ $session->starts_at->format('d/m/Y H:i') }} - {{ $session->ends_at->format('H:i') }}</p>
+                                @php
+                                    $sessionRouteKey = $session->getRouteKey() ?: $session->id;
+                                @endphp
+                                <a href="{{ route('sessions.show', ['classSession' => $sessionRouteKey]) }}" class="block rounded border border-gray-200 p-4 hover:bg-gray-50">
+                                    <p class="font-medium text-gray-900">{{ $session->subject?->name ?? 'Materia no disponible' }} @if($session->topic) · {{ $session->topic }} @endif</p>
+                                    <p class="text-sm text-gray-600">{{ $session->starts_at?->format('d/m/Y H:i') ?? 'Sin inicio' }} - {{ $session->ends_at?->format('H:i') ?? 'Sin fin' }}</p>
                                 </a>
                             @endforeach
                         </div>

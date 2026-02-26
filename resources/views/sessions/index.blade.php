@@ -68,15 +68,18 @@
                 @else
                     <div class="space-y-3">
                         @foreach($sessions as $session)
+                            @php
+                                $sessionRouteKey = $session->getRouteKey() ?: $session->id;
+                            @endphp
                             <div class="border rounded p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                                 <div>
                                     <p class="font-semibold text-gray-900">{{ $session->subject?->name ?? 'Materia no disponible' }} @if($session->topic) · {{ $session->topic }} @endif</p>
                                     <p class="text-sm text-gray-600">{{ $session->starts_at?->format('d/m/Y H:i') ?? 'Sin inicio' }} - {{ $session->ends_at?->format('H:i') ?? 'Sin fin' }} · QR {{ $session->qr_rotation_seconds ?? '—' }}s · Asistencias {{ $session->attendances_count }}</p>
                                 </div>
                                 <div class="flex gap-2">
-                                    <a href="{{ route('sessions.show', $session) }}" class="rounded bg-indigo-600 px-3 py-2 text-xs font-semibold text-white">Abrir sesión</a>
-                                    <a href="{{ route('sessions.export-csv', $session) }}" class="rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">CSV</a>
-                                    <form method="POST" action="{{ route('sessions.destroy', $session) }}" onsubmit="return confirm('¿Eliminar sesión?');">
+                                    <a href="{{ route('sessions.show', ['classSession' => $sessionRouteKey]) }}" class="rounded bg-indigo-600 px-3 py-2 text-xs font-semibold text-white">Abrir sesión</a>
+                                    <a href="{{ route('sessions.export-csv', ['classSession' => $sessionRouteKey]) }}" class="rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">CSV</a>
+                                    <form method="POST" action="{{ route('sessions.destroy', ['classSession' => $sessionRouteKey]) }}" onsubmit="return confirm('¿Eliminar sesión?');">
                                         @csrf
                                         @method('DELETE')
                                         <button class="rounded bg-red-600 px-3 py-2 text-xs font-semibold text-white">Eliminar</button>

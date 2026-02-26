@@ -1,4 +1,8 @@
 <x-app-layout>
+    @php
+        $sessionRouteKey = $classSession->getRouteKey() ?: $classSession->id;
+    @endphp
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">Sesión en vivo</h2>
     </x-slot>
@@ -19,7 +23,7 @@
                 <p class="mt-2 text-sm text-gray-500">PIN para alumnos</p>
                 <p class="text-2xl tracking-widest font-bold text-indigo-700">{{ $classSession->professor_pin }}</p>
                     </div>
-                    <a href="{{ route('sessions.export-csv', $classSession) }}" class="self-start rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">Descargar CSV</a>
+                    <a href="{{ route('sessions.export-csv', ['classSession' => $sessionRouteKey]) }}" class="self-start rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">Descargar CSV</a>
                 </div>
             </div>
 
@@ -67,7 +71,7 @@
     </div>
 
     <script>
-        const qrEndpoint = "{{ route('sessions.qr-payload', $classSession) }}";
+        const qrEndpoint = "{{ route('sessions.qr-payload', ['classSession' => $sessionRouteKey]) }}";
         const qrCanvas = document.getElementById('qrCanvas');
         const qrUrl = document.getElementById('qrUrl');
         const expiresLabel = document.getElementById('expiresLabel');
