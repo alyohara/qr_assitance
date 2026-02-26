@@ -108,6 +108,7 @@ class AttendanceController extends Controller
         $alreadyMarked = ! $attendance->wasRecentlyCreated;
 
         return response()->view('attendance.success', [
+            'alreadyMarked' => $alreadyMarked,
             'message' => $alreadyMarked
                 ? 'Tu asistencia ya estaba registrada en esta sesión.'
                 : 'Asistencia registrada correctamente.',

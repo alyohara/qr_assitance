@@ -38,6 +38,10 @@
                         Registrando asistencia como <strong>{{ auth()->user()->name }}</strong> ({{ auth()->user()->email }}).
                     </div>
 
+                    <a href="{{ route('google.redirect', ['next' => $googleNext ?? url()->full(), 'force_account' => 1]) }}" class="mt-3 inline-flex w-full items-center justify-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                        Cambiar cuenta de Google
+                    </a>
+
                     <form method="POST" action="{{ route('attendance.store', $classSession) }}" class="mt-4 space-y-4" id="attendanceForm">
                         @csrf
                         <input type="hidden" name="window" value="{{ $window }}">

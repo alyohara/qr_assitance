@@ -16,12 +16,23 @@ class GoogleAuthController extends Controller
     public function redirect(Request $request): RedirectResponse
     {
         $next = $request->query('next');
+        $forceAccount = $request->boolean('force_account');
 
         if (is_string($next) && $next !== '') {
             $request->session()->put('google_auth_next', $next);
         }
 
-        return Socialite::driver('google')->redirect();
+        if ($forceAccount && Auth::check()) {
+            Auth::logout();
+        }
+
+        $driver = Socialite::driver('google');
+
+        if ($forceAccount) {
+            $driver = $driver->with(['prompt' => 'select_account']);
+        }
+
+        return $driver->redirect();
     }
 
     public function callback(Request $request): RedirectResponse
