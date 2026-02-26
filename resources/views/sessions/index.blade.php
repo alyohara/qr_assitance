@@ -9,6 +9,10 @@
                 <div class="rounded bg-green-50 border border-green-200 p-3 text-sm text-green-700">{{ session('status') }}</div>
             @endif
 
+            @if ($errors->has('session'))
+                <div class="rounded bg-red-50 border border-red-200 p-3 text-sm text-red-700">{{ $errors->first('session') }}</div>
+            @endif
+
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">Crear sesión</h3>
                 @if($subjects->isEmpty())
@@ -66,7 +70,7 @@
                         @foreach($sessions as $session)
                             <div class="border rounded p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                                 <div>
-                                    <p class="font-semibold text-gray-900">{{ $session->subject->name }} @if($session->topic) · {{ $session->topic }} @endif</p>
+                                    <p class="font-semibold text-gray-900">{{ $session->subject?->name ?? 'Materia no disponible' }} @if($session->topic) · {{ $session->topic }} @endif</p>
                                     <p class="text-sm text-gray-600">{{ $session->starts_at->format('d/m/Y H:i') }} - {{ $session->ends_at->format('H:i') }} · QR {{ $session->qr_rotation_seconds }}s · Asistencias {{ $session->attendances_count }}</p>
                                 </div>
                                 <div class="flex gap-2">

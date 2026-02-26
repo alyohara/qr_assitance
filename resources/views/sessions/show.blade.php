@@ -13,7 +13,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <div>
                 <p class="text-sm text-gray-500">Materia</p>
-                <p class="text-lg font-semibold text-gray-900">{{ $classSession->subject->name }} @if($classSession->topic) · {{ $classSession->topic }} @endif</p>
+                <p class="text-lg font-semibold text-gray-900">{{ $classSession->subject?->name ?? 'Materia no disponible' }} @if($classSession->topic) · {{ $classSession->topic }} @endif</p>
                 <p class="mt-1 text-sm text-gray-600">Horario: {{ $classSession->starts_at->format('d/m/Y H:i') }} - {{ $classSession->ends_at->format('H:i') }}</p>
                 <p class="mt-1 text-sm text-gray-600">Rotación QR: cada {{ $classSession->qr_rotation_seconds }} segundos</p>
                 <p class="mt-2 text-sm text-gray-500">PIN para alumnos</p>
@@ -52,9 +52,9 @@
                                 <tbody>
                                     @foreach($classSession->attendances as $attendance)
                                         <tr class="border-b">
-                                            <td class="py-2">{{ $attendance->student->full_name }}</td>
-                                            <td class="py-2">{{ $attendance->student->student_code }}</td>
-                                            <td class="py-2">{{ $attendance->scanned_at->format('H:i:s') }}</td>
+                                            <td class="py-2">{{ $attendance->student?->full_name ?? 'Alumno no disponible' }}</td>
+                                            <td class="py-2">{{ $attendance->student?->student_code ?? '—' }}</td>
+                                            <td class="py-2">{{ $attendance->scanned_at?->format('H:i:s') ?? '—' }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassSession;
 use App\Models\Subject;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
@@ -73,6 +74,12 @@ class SessionController extends Controller
             'attendances.student',
         ]);
 
+        if (! $classSession->subject) {
+            return redirect()->route('sessions.index')->withErrors([
+                'session' => 'La sesión no tiene una materia válida asociada.',
+            ]);
+        }
+
         $classSession->setRelation(
             'attendances',
             $classSession->attendances->sortByDesc('scanned_at')->values()
@@ -111,7 +118,13 @@ class SessionController extends Controller
      */
     public function destroy(ClassSession $classSession)
     {
-        $classSession->delete();
+        try {
+            $classSession->delete();
+        } catch (QueryException $exception) {
+            return redirect()->route('sessions.index')->withErrors([
+                'session' => 'No se pudo eliminar la sesión. Revisa dependencias de base de datos.',
+            ]);
+        }
 
         return redirect()->route('sessions.index')->with('status', 'Sesión eliminada.');
     }
