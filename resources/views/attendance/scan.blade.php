@@ -33,30 +33,43 @@
                     <p class="text-sm text-gray-600">Sesión hasta {{ $classSession->ends_at->format('d/m/Y H:i') }}</p>
                 </div>
 
-                <form method="POST" action="{{ route('attendance.store', $classSession) }}" class="mt-4 space-y-4">
-                    @csrf
-                    <input type="hidden" name="window" value="{{ $window }}">
-                    <input type="hidden" name="sig" value="{{ $sig }}">
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Código de alumno</label>
-                        <input name="student_code" value="{{ old('student_code') }}" required class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Nombre completo</label>
-                        <input name="full_name" value="{{ old('full_name') }}" required class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}" required class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">PIN del profesor</label>
-                        <input name="professor_pin" maxlength="6" required class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+                @auth
+                    <div class="mt-4 rounded border border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-800">
+                        Registrando asistencia como <strong>{{ auth()->user()->name }}</strong> ({{ auth()->user()->email }}).
                     </div>
 
-                    <button class="w-full rounded bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">Registrar asistencia</button>
-                </form>
+                    <form method="POST" action="{{ route('attendance.store', $classSession) }}" class="mt-4 space-y-4" id="attendanceForm">
+                        @csrf
+                        <input type="hidden" name="window" value="{{ $window }}">
+                        <input type="hidden" name="sig" value="{{ $sig }}">
+                        <input type="hidden" name="device_id" id="deviceIdInput" value="">
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">PIN del profesor</label>
+                            <input name="professor_pin" maxlength="6" required class="mt-1 w-full rounded-md border-gray-300 shadow-sm" />
+                        </div>
+
+                        <button class="w-full rounded bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">Registrar asistencia</button>
+                    </form>
+
+                    <script>
+                        const key = 'attendance_device_id';
+                        let deviceId = localStorage.getItem(key);
+
+                        if (!deviceId) {
+                            deviceId = (window.crypto && window.crypto.randomUUID)
+                                ? window.crypto.randomUUID()
+                                : `dev-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+                            localStorage.setItem(key, deviceId);
+                        }
+
+                        document.getElementById('deviceIdInput').value = deviceId;
+                    </script>
+                @else
+                    <a href="{{ route('google.redirect', ['next' => $googleNext ?? url()->full()]) }}" class="mt-4 inline-flex w-full items-center justify-center rounded bg-white border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                        Continuar con Google para registrar asistencia
+                    </a>
+                @endauth
             @else
                 <p class="mt-4 text-sm text-gray-600">Escanea nuevamente el QR vigente de tu clase.</p>
             @endif

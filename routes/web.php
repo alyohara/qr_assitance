@@ -26,15 +26,20 @@ Route::get('/dashboard', function () {
             ->latest('starts_at')
             ->get(),
     ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'professor'])->name('dashboard');
 
 Route::get('/asistencia/{classSession}', [AttendanceController::class, 'create'])->name('attendance.scan');
-Route::post('/asistencia/{classSession}', [AttendanceController::class, 'store'])->name('attendance.store');
+Route::post('/asistencia/{classSession}', [AttendanceController::class, 'store'])
+    ->middleware('auth')
+    ->name('attendance.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth', 'professor'])->group(function () {
 
     Route::resource('subjects', SubjectController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('sessions', SessionController::class)
