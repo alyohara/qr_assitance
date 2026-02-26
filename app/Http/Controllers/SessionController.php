@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\ClassSession;
 use App\Models\Subject;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class SessionController extends Controller
@@ -119,7 +121,13 @@ class SessionController extends Controller
     public function destroy(ClassSession $classSession)
     {
         try {
-            $classSession->delete();
+            DB::transaction(function () use ($classSession): void {
+                Attendance::query()
+                    ->where('class_session_id', $classSession->id)
+                    ->delete();
+
+                $classSession->delete();
+            });
         } catch (QueryException $exception) {
             return redirect()->route('sessions.index')->withErrors([
                 'session' => 'No se pudo eliminar la sesión. Revisa dependencias de base de datos.',
