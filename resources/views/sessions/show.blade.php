@@ -14,8 +14,8 @@
                     <div>
                 <p class="text-sm text-gray-500">Materia</p>
                 <p class="text-lg font-semibold text-gray-900">{{ $classSession->subject?->name ?? 'Materia no disponible' }} @if($classSession->topic) · {{ $classSession->topic }} @endif</p>
-                <p class="mt-1 text-sm text-gray-600">Horario: {{ $classSession->starts_at->format('d/m/Y H:i') }} - {{ $classSession->ends_at->format('H:i') }}</p>
-                <p class="mt-1 text-sm text-gray-600">Rotación QR: cada {{ $classSession->qr_rotation_seconds }} segundos</p>
+                <p class="mt-1 text-sm text-gray-600">Horario: {{ $classSession->starts_at?->format('d/m/Y H:i') ?? 'Sin inicio' }} - {{ $classSession->ends_at?->format('H:i') ?? 'Sin fin' }}</p>
+                <p class="mt-1 text-sm text-gray-600">Rotación QR: cada {{ $classSession->qr_rotation_seconds ?? '—' }} segundos</p>
                 <p class="mt-2 text-sm text-gray-500">PIN para alumnos</p>
                 <p class="text-2xl tracking-widest font-bold text-indigo-700">{{ $classSession->professor_pin }}</p>
                     </div>
