@@ -70,7 +70,7 @@ class SessionController extends Controller
      */
     public function show(ClassSession $classSession)
     {
-        abort_unless($classSession->user_id === auth()->id(), 403);
+        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
 
         $classSession->load([
             'subject',
@@ -98,7 +98,7 @@ class SessionController extends Controller
      */
     public function update(Request $request, ClassSession $classSession)
     {
-        abort_unless($classSession->user_id === auth()->id(), 403);
+        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
 
         $data = $request->validate([
             'topic' => ['nullable', 'string', 'max:120'],
@@ -117,7 +117,7 @@ class SessionController extends Controller
      */
     public function destroy(ClassSession $classSession)
     {
-        abort_unless($classSession->user_id === auth()->id(), 403);
+        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
 
         $classSession->delete();
 
@@ -126,7 +126,7 @@ class SessionController extends Controller
 
     public function qrPayload(ClassSession $classSession)
     {
-        abort_unless($classSession->user_id === auth()->id(), 403);
+        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
 
         $window = $classSession->windowForTime();
         $signature = $classSession->signWindow($window);
@@ -148,7 +148,7 @@ class SessionController extends Controller
 
     public function exportCsv(ClassSession $classSession)
     {
-        abort_unless($classSession->user_id === auth()->id(), 403);
+        abort_unless((int) $classSession->user_id === (int) auth()->id(), 403);
 
         $classSession->load(['subject', 'attendances.student']);
 

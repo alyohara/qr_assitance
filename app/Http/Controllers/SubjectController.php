@@ -66,7 +66,7 @@ class SubjectController extends Controller
      */
     public function update(Request $request, Subject $subject)
     {
-        abort_unless($subject->user_id === auth()->id(), 403);
+        abort_unless((int) $subject->user_id === (int) auth()->id(), 403);
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
@@ -83,7 +83,7 @@ class SubjectController extends Controller
      */
     public function destroy(Subject $subject)
     {
-        abort_unless($subject->user_id === auth()->id(), 403);
+        abort_unless((int) $subject->user_id === (int) auth()->id(), 403);
 
         $subject->delete();
 
@@ -92,7 +92,7 @@ class SubjectController extends Controller
 
     public function exportCsv(Subject $subject)
     {
-        abort_unless($subject->user_id === auth()->id(), 403);
+        abort_unless((int) $subject->user_id === (int) auth()->id(), 403);
 
         $subject->load(['sessions.attendances.student']);
 
