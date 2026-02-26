@@ -33,13 +33,11 @@ Route::post('/asistencia/{classSession}', [AttendanceController::class, 'store']
     ->middleware('auth')
     ->name('attendance.store');
 
-Route::middleware('signed')->group(function () {
-    Route::get('/public/sessions/{classSession}/{mode}', [SessionController::class, 'publicBoard'])
-        ->whereIn('mode', ['qr', 'qr-token'])
-        ->name('sessions.public-board');
-    Route::get('/public/sessions/{classSession}/qr-payload', [SessionController::class, 'publicQrPayload'])
-        ->name('sessions.public-qr-payload');
-});
+Route::get('/public/sessions/{classSession}/{mode}', [SessionController::class, 'publicBoard'])
+    ->whereIn('mode', ['qr', 'qr-token'])
+    ->name('sessions.public-board');
+Route::get('/public/sessions/{classSession}/qr-payload', [SessionController::class, 'publicQrPayload'])
+    ->name('sessions.public-qr-payload');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -9,7 +9,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
 
 class SessionController extends Controller
@@ -82,21 +81,9 @@ class SessionController extends Controller
             $classSession->attendances->sortByDesc('scanned_at')->values()
         );
 
-        $publishUntil = $classSession->ends_at && $classSession->ends_at->isFuture()
-            ? $classSession->ends_at
-            : now()->addHours(4);
+        $publicQrOnlyUrl = route('sessions.public-board', ['classSession' => $classSession, 'mode' => 'qr']);
 
-        $publicQrOnlyUrl = URL::temporarySignedRoute(
-            'sessions.public-board',
-            $publishUntil,
-            ['classSession' => $classSession, 'mode' => 'qr']
-        );
-
-        $publicQrWithTokenUrl = URL::temporarySignedRoute(
-            'sessions.public-board',
-            $publishUntil,
-            ['classSession' => $classSession, 'mode' => 'qr-token']
-        );
+        $publicQrWithTokenUrl = route('sessions.public-board', ['classSession' => $classSession, 'mode' => 'qr-token']);
 
         return view('sessions.show', compact('classSession', 'publicQrOnlyUrl', 'publicQrWithTokenUrl'));
     }
@@ -157,15 +144,7 @@ class SessionController extends Controller
     {
         abort_unless(in_array($mode, ['qr', 'qr-token'], true), 404);
 
-        $publishUntil = $classSession->ends_at && $classSession->ends_at->isFuture()
-            ? $classSession->ends_at
-            : now()->addHours(4);
-
-        $publicQrPayloadUrl = URL::temporarySignedRoute(
-            'sessions.public-qr-payload',
-            $publishUntil,
-            ['classSession' => $classSession]
-        );
+        $publicQrPayloadUrl = route('sessions.public-qr-payload', ['classSession' => $classSession]);
 
         return view('sessions.public-board', [
             'classSession' => $classSession->load('subject'),
