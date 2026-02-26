@@ -43,6 +43,7 @@
                                 </div>
                                 <div class="flex gap-2">
                                     <a href="{{ route('subjects.export-csv', $subject) }}" class="rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">CSV</a>
+                                    <a href="{{ route('subjects.export-pdf', $subject) }}" class="rounded bg-amber-500 px-3 py-2 text-xs font-semibold text-white">PDF</a>
                                     <form method="POST" action="{{ route('subjects.update', $subject) }}" class="flex gap-2">
                                         @csrf
                                         @method('PATCH')

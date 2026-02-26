@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Attendance;
 use App\Models\ClassSession;
 use App\Models\Subject;
@@ -195,6 +196,18 @@ class SessionController extends Controller
         }, $filename, [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
+    }
+
+    public function exportPdf(ClassSession $classSession)
+    {
+        $classSession->load(['subject', 'attendances.student']);
+
+        $pdf = Pdf::loadView('pdf.session-attendance', [
+            'classSession' => $classSession,
+            'attendances' => $classSession->attendances->sortBy('scanned_at')->values(),
+        ]);
+
+        return $pdf->download('asistencias-sesion-'.$classSession->uuid.'.pdf');
     }
 
     private function buildQrPayload(ClassSession $classSession): array

@@ -106,9 +106,11 @@ class AttendanceController extends Controller
 
         $alreadyMarked = ! $attendance->wasRecentlyCreated;
 
-        return back()->with('status', $alreadyMarked
-            ? 'Tu asistencia ya estaba registrada en esta sesión.'
-            : 'Asistencia registrada correctamente.');
+        return response()->view('attendance.success', [
+            'message' => $alreadyMarked
+                ? 'Tu asistencia ya estaba registrada en esta sesión.'
+                : 'Asistencia registrada correctamente.',
+        ]);
     }
 
     private function isValidScanWindow(ClassSession $classSession, int $window, string $signature): bool

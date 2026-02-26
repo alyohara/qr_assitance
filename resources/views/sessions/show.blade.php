@@ -25,6 +25,7 @@
                     </div>
                     <div class="self-start flex flex-col gap-2">
                         <a href="{{ route('sessions.export-csv', ['classSession' => $sessionRouteKey]) }}" class="rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white text-center">Descargar CSV</a>
+                        <a href="{{ route('sessions.export-pdf', ['classSession' => $sessionRouteKey]) }}" class="rounded bg-amber-500 px-3 py-2 text-xs font-semibold text-white text-center">Descargar PDF</a>
                         <a href="{{ $publicQrOnlyUrl }}" target="_blank" class="rounded bg-indigo-600 px-3 py-2 text-xs font-semibold text-white text-center">Publicar datos sin token</a>
                         <a href="{{ $publicQrWithTokenUrl }}" target="_blank" class="rounded bg-violet-600 px-3 py-2 text-xs font-semibold text-white text-center">Publicar datos con token</a>
                     </div>

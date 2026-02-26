@@ -79,6 +79,7 @@
                                 <div class="flex gap-2">
                                     <a href="{{ route('sessions.show', ['classSession' => $sessionRouteKey]) }}" class="rounded bg-indigo-600 px-3 py-2 text-xs font-semibold text-white">Abrir sesión</a>
                                     <a href="{{ route('sessions.export-csv', ['classSession' => $sessionRouteKey]) }}" class="rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">CSV</a>
+                                    <a href="{{ route('sessions.export-pdf', ['classSession' => $sessionRouteKey]) }}" class="rounded bg-amber-500 px-3 py-2 text-xs font-semibold text-white">PDF</a>
                                     <form method="POST" action="{{ route('sessions.destroy', ['classSession' => $sessionRouteKey]) }}" onsubmit="return confirm('¿Eliminar sesión?');">
                                         @csrf
                                         @method('DELETE')

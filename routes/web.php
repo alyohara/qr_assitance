@@ -53,7 +53,9 @@ Route::middleware(['auth', 'professor'])->group(function () {
         ->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::get('/sessions/{classSession}/qr-payload', [SessionController::class, 'qrPayload'])->name('sessions.qr-payload');
     Route::get('/sessions/{classSession}/export-csv', [SessionController::class, 'exportCsv'])->name('sessions.export-csv');
+    Route::get('/sessions/{classSession}/export-pdf', [SessionController::class, 'exportPdf'])->name('sessions.export-pdf');
     Route::get('/subjects/{subject}/export-csv', [SubjectController::class, 'exportCsv'])->name('subjects.export-csv');
+    Route::get('/subjects/{subject}/export-pdf', [SubjectController::class, 'exportPdf'])->name('subjects.export-pdf');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 });
 

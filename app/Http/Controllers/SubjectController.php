@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Attendance;
 use App\Models\ClassSession;
 use App\Models\Subject;
@@ -147,5 +148,35 @@ class SubjectController extends Controller
         }, $filename, [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
+    }
+
+    public function exportPdf(Subject $subject)
+    {
+        $subject->load(['sessions.attendances.student']);
+
+        $rows = collect();
+
+        foreach ($subject->sessions as $session) {
+            foreach ($session->attendances as $attendance) {
+                $rows->push([
+                    'session_uuid' => $session->uuid,
+                    'topic' => $session->topic,
+                    'starts_at' => Carbon::parse($session->starts_at),
+                    'ends_at' => Carbon::parse($session->ends_at),
+                    'student_code' => $attendance->student->student_code,
+                    'student_name' => $attendance->student->full_name,
+                    'student_email' => $attendance->student->email,
+                    'scanned_at' => Carbon::parse($attendance->scanned_at),
+                    'scan_ip' => $attendance->scan_ip,
+                ]);
+            }
+        }
+
+        $pdf = Pdf::loadView('pdf.subject-attendance', [
+            'subject' => $subject,
+            'rows' => $rows,
+        ]);
+
+        return $pdf->download('asistencias-materia-'.$subject->id.'.pdf');
     }
 }
